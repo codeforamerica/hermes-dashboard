@@ -3,6 +3,8 @@
 @focusColour: rgb(255, 142, 56);
 @highlightColour: rgb(65, 103, 103);
 
+@warningColour: rgb(200, 20, 20);
+
 @inputPadding: 12px;
 @inputBorderRadius: 8px;
 
@@ -145,9 +147,36 @@ button:active {
   font-size: 16px;
   display: block;
 
-  color: darken(@focusColour, 10%);
+  color: @warningColour;
 
   padding-top: @inputPadding * 2;
   padding-bottom: @inputPadding * 2;
   padding-left: @inputPadding * 2;
+}
+
+.text-counter {
+  margin-left: @sectionWidth - @labelWidth - @labelPadding - 10px - 2px;
+
+  width: 40px;
+  display: inline-block;
+  text-align: right;
+
+  background: white;
+  font-size: 16px;
+  margin-top: @inputPadding;
+  padding: @inputPadding / 2 @inputPadding;
+  padding-left: 0;
+
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+
+  border-radius: 0 4px 4px 0;
+
+  position: absolute;
+
+  -webkit-transition: color 120ms, background 120ms;
+}
+.text-counter.warning {
+  color: @warningColour;
+
+  background: lighten(@warningColour, 50%);
 }
