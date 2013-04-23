@@ -134,8 +134,10 @@
     
     if (!value) {
       valid = true;
+      caseNumberInvalid = true;
     } else {
       valid = value.match(CASE_NUMBER_REGEXP);
+      caseNumberInvalid = !valid;
     }
       
     if (!valid) {
@@ -146,7 +148,15 @@
       $('#case-number-error').removeClass('visible');
     }
 
-    caseNumberInvalid = !valid;
+    updateAddButton();
+  }
+
+  function areFieldsValid() {
+    return !caseNumberInvalid;
+  }
+
+  function updateAddButton() {
+    $('#add')[0].disabled = !areFieldsValid();
   }
 
   function onCaseNumberBlur() {
@@ -160,7 +170,6 @@
   }
 
   function onCaseNumberInput() {
-
     if (caseNumberLastError) {
       validateCaseNumber();
     }
@@ -169,13 +178,53 @@
   function onCaseNumberFocus() {
   }
 
-  function main() {
+  function reset() {
+    $('#add')[0].disabled = true;
+
+    $('#case-number')[0].value = '';
+    $('#phone-number')[0].value = '';
+
+    $('#case-number').removeClass('invalid');      
+    $('#case-number-error').removeClass('visible');
+
+    $('#phone-number').removeClass('invalid');      
+    $('#phone-number-error').removeClass('visible');
+
     $('#case-number').focus();
+  }
 
+  function onAdd() {
+    validateCaseNumber();
+
+    if (areFieldsValid()) {
+      reset();
+    }
+  }
+
+  function onCaseNumberKeyDown(event) {
+    if (event.keyCode == 13) {
+      onAdd();
+    }
+  }
+
+  function onPhoneNumberKeyDown() {
+    if (event.keyCode == 13) {
+      onAdd();
+    }
+  }
+
+  function main() {
     $('#case-number').on('input', onCaseNumberInput);
-
+    
     $('#case-number').on('focus', onCaseNumberFocus);
     $('#case-number').on('blur', onCaseNumberBlur);
+
+    $('#case-number').on('keydown', onCaseNumberKeyDown);
+    $('#phone-number').on('keydown', onPhoneNumberKeyDown);
+
+    $('#add').on('click', onAdd);
+
+    reset();
   }
 </script>
 
@@ -197,7 +246,7 @@
         <td>
           <input id='phone-number'>
         <td>
-          <button>Add</button>
+          <button id='add'>Add</button>
       <tr>
         <td>
           <div id='case-number-error'>
