@@ -117,10 +117,27 @@
     border-color: rgb(255, 143, 56);    
   }
 
+  #previous-entries {
+    margin: 0 auto; 
+    width: 540px;
+    padding-right: 80px;
+    margin-top: 50px;
+  }
+
+  #previous-entries div {
+    overflow: hidden;
+  }
+  #previous-entries div span {
+    float: left;
+    width: 250px;
+    padding: 5px 10px;
+  }
+
 </style>
 
 <script>
-  var CASE_NUMBER_REGEXP = /(\d[1-9]?)-?([A-Za-z])-?(\d{0,5}[1-9])-?(\d{0,2}[1-9])?/;
+  var KEY_ENTER = 13;
+  var CASE_NUMBER_REGEXP = /^(\d[1-9]?)-?([A-Za-z])-?(\d{0,5}[1-9])-?(\d{0,2}[1-9])?$/;
 
   var caseNumberInvalid = false;
   var caseNumberLastError = false;
@@ -197,18 +214,27 @@
     validateCaseNumber();
 
     if (areFieldsValid()) {
+      var caseNumber = $('#case-number')[0].value;
+      var phoneNumber = $('#phone-number')[0].value;
+
+      console.log('a');
+      var html = '<div><span>' + caseNumber + '</span><span>' + phoneNumber + '</span></div>';
+
+      $('#previous-entries')[0].innerHTML = 
+          html + $('#previous-entries')[0].innerHTML;
+
       reset();
     }
   }
 
   function onCaseNumberKeyDown(event) {
-    if (event.keyCode == 13) {
+    if (event.keyCode == KEY_ENTER) {
       onAdd();
     }
   }
 
   function onPhoneNumberKeyDown() {
-    if (event.keyCode == 13) {
+    if (event.keyCode == KEY_ENTER) {
       onAdd();
     }
   }
@@ -257,6 +283,9 @@
             This doesn’t look like a proper phone number. Please correct before
             adding.
     </table>
+  </div>
+
+  <div id='previous-entries'>
   </div>
 
   <script>
