@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<title>Code for America data input</title>
+<meta charset='utf-8'>
+
+<script src='jquery-1.9.1.min.js'></script>
+
+<style>
+  body {
+    background: rgb(240, 240, 240);
+    padding: 20px;
+  }
+  body,
+  input {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+  }
+
+  table h1 {
+    font-size: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  table td {
+    vertical-align: top;
+  }
+
+  table th {
+    text-align: left;
+    font-weight: normal;
+    padding-left: 10px;
+    line-height: 20px;
+  }
+
+  #case-number,
+  #phone-number {
+    width: 250px;
+
+    background: white;
+    line-height: 28px;
+
+    border-top: 1px solid rgb(220, 220, 220);
+    border-left: 1px solid rgb(220, 220, 220);
+    border-right: 1px solid rgb(230, 230, 230);
+    border-bottom: 1px solid rgb(230, 230, 230);
+
+    padding: 5px 10px;
+
+    outline: none;
+  }
+
+  table {
+    margin: 0 auto;
+  }
+
+  #case-number.invalid {
+    color: rgb(200, 50, 50);
+    border-color: rgb(200, 50, 50);
+    background: rgb(255, 240, 240);
+  }
+
+  #case-number-error,
+  #phone-number-error {
+    width: 200px;
+
+    color: rgb(200, 50, 50);
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 16px;
+
+    visibility: hidden;
+  }
+
+  #case-number-error.visible,
+  #phone-number-error.visible {
+    visibility: visible;
+  }
+
+  #case-number:focus,
+  #phone-number:focus {
+    border-color: rgb(50, 100, 250);
+    color: black;
+    background: white;
+  }
+  
+</style>
+
+<script>
+  var CASE_NUMBER_REGEXP = /(\d[1-9]?)-?([A-Za-z])-?(\d{0,5}[1-9])-?(\d{0,2}[1-9])?/;
+
+  function validateCaseNumber() {
+    var value = this.value;
+
+    value = $.trim(value);
+
+    var valid = false;
+    
+    if (!value) {
+      valid = true;
+    } else {
+      valid = value.match(CASE_NUMBER_REGEXP);
+    }
+      
+    if (!valid) {
+      $('#case-number').addClass('invalid');
+      $('#case-number-error').addClass('visible');
+    } else {
+      $('#case-number').removeClass('invalid');      
+      $('#case-number-error').removeClass('visible');
+    }
+  }
+
+  function onCaseNumberFocus() {
+    //$('#case-number').removeClass('invalid');
+    //$('#case-number-error').removeClass('visible');
+  }
+
+  function main() {
+    $('#case-number').focus();
+
+    $('#case-number').on('focus', onCaseNumberFocus);
+    $('#case-number').on('blur', validateCaseNumber);
+  }
+</script>
+
+<body>
+
+  <div id='entry'>
+    <table>
+      <tr>
+        <th>
+          <h1>Case number</h1>
+          e.g. 13-M-012345
+        <th>
+          <h1>Phone number</h1>
+          e.g. 502-123-4567 (area number optional if 502)
+      <tr>
+        <td>
+          <input id='case-number'>
+        <td>
+          <input id='phone-number'>
+        <td>
+          <button>Add</button>
+      <tr>
+        <td>
+          <div id='case-number-error'>
+            This doesn’t look like a proper case number. Please correct before
+            submitting.
+        <td>
+          <div id='phone-number-error'>
+            This doesn’t look like a proper phone number. Please correct before
+            submitting.
+    </table>
+  </div>
+
+  <script>
+    main();
+  </script>
+
+</body>
