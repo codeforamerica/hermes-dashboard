@@ -11,7 +11,8 @@
     padding: 20px;
   }
   body,
-  input {
+  input,
+  button {
     font-family: Arial, sans-serif;
     font-size: 16px;
   }
@@ -20,6 +21,7 @@
     font-size: 100%;
     padding: 0;
     margin: 0;
+    margin-bottom: 5px;
   }
 
   table td {
@@ -31,6 +33,8 @@
     font-weight: normal;
     padding-left: 10px;
     line-height: 20px;
+
+    vertical-align: top;
   }
 
   #case-number,
@@ -38,7 +42,6 @@
     width: 250px;
 
     background: white;
-    line-height: 28px;
 
     border-top: 1px solid rgb(220, 220, 220);
     border-left: 1px solid rgb(220, 220, 220);
@@ -46,8 +49,35 @@
     border-bottom: 1px solid rgb(230, 230, 230);
 
     padding: 5px 10px;
+    line-height: 28px;
 
     outline: none;
+  }
+
+  button {
+    background: rgb(245, 245, 245);
+
+    border-bottom: 1px solid rgb(200, 200, 200);
+    border-right: 1px solid rgb(200, 200, 200);
+    border-top: 1px solid rgb(255, 255, 255);
+    border-left: 1px solid rgb(255, 255, 255);
+
+    border-radius: 5px;
+
+    padding: 5px 20px;
+    line-height: 28px;
+
+    outline: none;
+  }
+  button:active {
+    background: rgb(225, 225, 225);
+
+    color: rgb(100, 100, 100);
+
+    border-top: 1px solid rgb(200, 200, 200);
+    border-left: 1px solid rgb(200, 200, 200);
+    border-right: 1px solid rgb(250, 250, 250);
+    border-bottom: 1px solid rgb(250, 250, 250);
   }
 
   table {
@@ -79,22 +109,28 @@
 
   #case-number:focus,
   #phone-number:focus {
-    border-color: rgb(50, 100, 250);
+    border-color: rgb(255, 143, 56);
     color: black;
     background: white;
   }
-  
+  button:focus {
+    border-color: rgb(255, 143, 56);    
+  }
+
 </style>
 
 <script>
   var CASE_NUMBER_REGEXP = /(\d[1-9]?)-?([A-Za-z])-?(\d{0,5}[1-9])-?(\d{0,2}[1-9])?/;
 
+  var caseNumberInvalid = false;
+  var caseNumberLastError = false;
+
   function validateCaseNumber() {
-    var value = this.value;
+    var value = $('#case-number')[0].value;
 
     value = $.trim(value);
 
-    var valid = false;
+    var valid;
     
     if (!value) {
       valid = true;
@@ -109,18 +145,37 @@
       $('#case-number').removeClass('invalid');      
       $('#case-number-error').removeClass('visible');
     }
+
+    caseNumberInvalid = !valid;
+  }
+
+  function onCaseNumberBlur() {
+    validateCaseNumber();
+
+    if (caseNumberInvalid) {
+      caseNumberLastError = true;
+    } else {
+      caseNumberLastError = false;
+    }
+  }
+
+  function onCaseNumberInput() {
+
+    if (caseNumberLastError) {
+      validateCaseNumber();
+    }
   }
 
   function onCaseNumberFocus() {
-    //$('#case-number').removeClass('invalid');
-    //$('#case-number-error').removeClass('visible');
   }
 
   function main() {
     $('#case-number').focus();
 
+    $('#case-number').on('input', onCaseNumberInput);
+
     $('#case-number').on('focus', onCaseNumberFocus);
-    $('#case-number').on('blur', validateCaseNumber);
+    $('#case-number').on('blur', onCaseNumberBlur);
   }
 </script>
 
@@ -134,7 +189,8 @@
           e.g. 13-M-012345
         <th>
           <h1>Phone number</h1>
-          e.g. 502-123-4567 (area number optional if 502)
+          e.g. 502-123-4567<br>
+          (you can skip area code if 502)
       <tr>
         <td>
           <input id='case-number'>
@@ -146,11 +202,11 @@
         <td>
           <div id='case-number-error'>
             This doesn’t look like a proper case number. Please correct before
-            submitting.
+            adding.
         <td>
           <div id='phone-number-error'>
             This doesn’t look like a proper phone number. Please correct before
-            submitting.
+            adding.
     </table>
   </div>
 
